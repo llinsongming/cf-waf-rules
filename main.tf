@@ -1,4 +1,8 @@
-data "cloudflare_zones" "all" {}
+data "cloudflare_zones" "all" {
+  filter {
+    status = "active"
+  }
+}
 
 locals {
   account_zones_map = { for zone in data.cloudflare_zones.all.zones : zone.name => zone }
