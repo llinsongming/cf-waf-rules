@@ -21,6 +21,14 @@ resource "cloudflare_ruleset" "custom_waf" {
   kind        = "zone"
   phase       = "http_request_firewall_custom"
 
+  lifecycle {
+    ignore_changes = [
+      rules[0].logging,
+      rules[1].logging,
+      rules[2].logging,
+    ]
+  }
+
   rules {
     action      = "skip"
     description = "Allow Verified Bots (skip WAF)"
