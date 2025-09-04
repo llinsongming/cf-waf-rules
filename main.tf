@@ -1,10 +1,16 @@
-data "cloudflare_zone" "zones" {
-  for_each = var.zones
-  name     = each.key
+data "cloudflare_zones" "all" {}
+
+locals {
+  account_zones_map = { for zone in data.cloudflare_zones.all.zones : zone.name => zone }
+
+  target_zones = {
+    for zone_name in var.zones : zone_name => local.account_zones_map[zone_name]
+    if lookup(local.account_zones_map, zone_name, null) != null
+  }
 }
 
 resource "cloudflare_ruleset" "custom_waf" {
-  for_each    = data.cloudflare_zone.zones
+  for_each    = local.target_zones
   zone_id     = each.value.id
   name        = "Custom WAF Rules"
   description = "Skip verified bots & Google UA; block ad click fraud"
