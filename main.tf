@@ -23,9 +23,7 @@ resource "cloudflare_ruleset" "custom_waf" {
 
   lifecycle {
     ignore_changes = [
-      rules[0].logging,
-      rules[1].logging,
-      rules[2].logging,
+      rules[*].logging,
     ]
   }
 
