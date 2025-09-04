@@ -7,8 +7,8 @@ terraform {
     }
   }
   cloud {
-    organization = "YOUR_TFC_ORG"
-    workspaces { name = "YOUR_TFC_WORKSPACE" }
+    organization = "ming807598914"
+    workspaces { name = "cloudflare" }
   }
 }
 
