@@ -1,14 +1,6 @@
-data "cloudflare_zone" "by_name" {
-  for_each = var.zones
-  filter = {
-    name   = each.key
-    status = "active"
-  }
-}
-
 resource "cloudflare_ruleset" "custom_waf" {
   for_each    = var.zones
-  zone_id     = data.cloudflare_zone.by_name[each.key].id
+  zone_id     = each.value
   name        = "Custom WAF Rules"
   description = "Skip verified bots & Google UA; block ad click fraud"
   kind        = "zone"
