@@ -1,6 +1,9 @@
 data "cloudflare_zone" "by_name" {
   for_each = var.zones
-  name     = each.key
+  filter {
+    name   = each.key
+    status = "active"
+  }
 }
 
 locals {
