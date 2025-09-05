@@ -27,7 +27,6 @@ resource "cloudflare_ruleset" "custom_waf" {
     expression  = "cf.client.bot"
     enabled     = true
     action_parameters { products = ["waf"] }
-    logging { enabled = true }
   }
 
   rules {
@@ -36,7 +35,6 @@ resource "cloudflare_ruleset" "custom_waf" {
     expression  = "(http.user_agent contains \"AdsBot-Google\" or http.user_agent contains \"Google-InspectionTool\" or http.user_agent contains \"Googlebot\" or http.user_agent contains \"Mediapartners-Google\")"
     enabled     = true
     action_parameters { products = ["waf"] }
-    logging { enabled = true }
   }
 
   rules {
