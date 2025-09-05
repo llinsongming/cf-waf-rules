@@ -27,6 +27,7 @@ resource "cloudflare_ruleset" "custom_waf" {
       enabled     = true
       expression  = <<-EOT
 not cf.client.bot
+and ip.geoip.asnum ne 15169
 and (
   lower(http.request.uri.query) contains "gclid="
   or lower(http.request.uri.query) contains "gbraid="
