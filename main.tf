@@ -1,15 +1,16 @@
-data "cloudflare_zones" "all" {
-  filter {
+data "cloudflare_zones" "by_name" {
+  for_each = var.zones
+  filter = {
+    name   = each.key
     status = "active"
+    match  = "all"
   }
 }
 
 locals {
-  account_zones_map = { for zone in data.cloudflare_zones.all.zones : zone.name => zone }
-
   target_zones = {
-    for zone_name in var.zones : zone_name => local.account_zones_map[zone_name]
-    if lookup(local.account_zones_map, zone_name, null) != null
+    for zone_name, ds in data.cloudflare_zones.by_name : zone_name => ds.zones[0]
+    if length(ds.zones) > 0
   }
 }
 
