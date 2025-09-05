@@ -71,6 +71,5 @@ and (
   )
 )
 EOT
-    logging { enabled = true }
   }
 }
