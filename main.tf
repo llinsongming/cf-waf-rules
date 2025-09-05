@@ -6,13 +6,9 @@ data "cloudflare_zone" "by_name" {
   }
 }
 
-locals {
-  target_zones = { for k, v in data.cloudflare_zone.by_name : k => v.id }
-}
-
 resource "cloudflare_ruleset" "custom_waf" {
-  for_each    = local.target_zones
-  zone_id     = each.value
+  for_each    = var.zones
+  zone_id     = data.cloudflare_zone.by_name[each.key].id
   name        = "Custom WAF Rules"
   description = "Skip verified bots & Google UA; block ad click fraud"
   kind        = "zone"
@@ -24,18 +20,14 @@ resource "cloudflare_ruleset" "custom_waf" {
       description = "Allow Verified Bots (skip WAF)"
       expression  = "cf.client.bot"
       enabled     = true
-      action_parameters = {
-        products = ["waf"]
-      }
+      action_parameters = { products = ["waf"] }
     },
     {
       action      = "skip"
       description = "Allow Google UA (skip WAF)"
       expression  = "(http.user_agent contains \"AdsBot-Google\" or http.user_agent contains \"Google-InspectionTool\" or http.user_agent contains \"Googlebot\" or http.user_agent contains \"Mediapartners-Google\")"
       enabled     = true
-      action_parameters = {
-        products = ["waf"]
-      }
+      action_parameters = { products = ["waf"] }
     },
     {
       action      = "block"
