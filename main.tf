@@ -8,12 +8,6 @@ resource "cloudflare_ruleset" "custom_waf" {
 
   rules = [
     {
-      action      = "block"
-      description = "TEMP: Block when query contains waf-test=1"
-      enabled     = true
-      expression  = "lower(http.request.uri.query) contains \"waf-test=1\""
-    },
-    {
       action      = "skip"
       description = "Allow Verified Bots (skip WAF)"
       expression  = "cf.client.bot"
