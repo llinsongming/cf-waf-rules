@@ -18,27 +18,30 @@ resource "cloudflare_ruleset" "custom_waf" {
   kind        = "zone"
   phase       = "http_request_firewall_custom"
 
-  rules {
-    action      = "skip"
-    description = "Allow Verified Bots (skip WAF)"
-    expression  = "cf.client.bot"
-    enabled     = true
-    action_parameters { products = ["waf"] }
-  }
-
-  rules {
-    action      = "skip"
-    description = "Allow Google UA (skip WAF)"
-    expression  = "(http.user_agent contains \"AdsBot-Google\" or http.user_agent contains \"Google-InspectionTool\" or http.user_agent contains \"Googlebot\" or http.user_agent contains \"Mediapartners-Google\")"
-    enabled     = true
-    action_parameters { products = ["waf"] }
-  }
-
-  rules {
-    action      = "block"
-    description = "Ad Click Guard (block)"
-    enabled     = true
-    expression  = <<-EOT
+  rules = [
+    {
+      action      = "skip"
+      description = "Allow Verified Bots (skip WAF)"
+      expression  = "cf.client.bot"
+      enabled     = true
+      action_parameters = {
+        products = ["waf"]
+      }
+    },
+    {
+      action      = "skip"
+      description = "Allow Google UA (skip WAF)"
+      expression  = "(http.user_agent contains \"AdsBot-Google\" or http.user_agent contains \"Google-InspectionTool\" or http.user_agent contains \"Googlebot\" or http.user_agent contains \"Mediapartners-Google\")"
+      enabled     = true
+      action_parameters = {
+        products = ["waf"]
+      }
+    },
+    {
+      action      = "block"
+      description = "Ad Click Guard (block)"
+      enabled     = true
+      expression  = <<-EOT
 not cf.client.bot
 and ip.geoip.asnum ne 15169
 and (
@@ -66,5 +69,6 @@ and (
   )
 )
 EOT
-  }
+    },
+  ]
 }
