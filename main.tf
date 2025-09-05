@@ -48,9 +48,6 @@ and (
     or lower(http.user_agent) contains "windows phone"
     or lower(http.user_agent) contains "ipod"
   )
-  or not (
-    lower(http.request.headers["accept-language"][0]) contains "de"
-  )
 )
 EOT
     },
