@@ -1,5 +1,10 @@
+data "cloudflare_zone" "by_name" {
+  for_each = var.zones
+  name     = each.key
+}
+
 locals {
-  target_zones = var.zones
+  target_zones = { for k, v in data.cloudflare_zone.by_name : k => v.id }
 }
 
 resource "cloudflare_ruleset" "custom_waf" {

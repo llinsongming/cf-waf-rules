@@ -1,4 +1,4 @@
 variable "zones" {
-  type        = map(string)
-  description = "域名到 zone_id 的映射，如 { \"example.com\" = \"<ZONE_ID>\" }"
+  type        = set(string)
+  description = "需要下发规则的域名集合，例如 [\"example.com\",\"example.net\"]"
 }
